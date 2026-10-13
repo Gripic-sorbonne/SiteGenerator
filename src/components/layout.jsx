@@ -308,25 +308,32 @@ const Header = ({ menuGroups }) => {
         <header>
             {/* Estilos CSS específicos para limpiar el menú y añadir líneas divisorias */}
             <style>{`
-                /* Ocultar la flecha por defecto de Bootstrap en el dropdown */
+                /* Ocultar la flecha por defecto de Bootstrap */
                 .dropdown-toggle::after {
                     display: none !important;
                 }
-                /* Eliminar viñetas y asegurar limpieza en la lista */
+                /* Limpiar la lista y quitar padding extra de Bootstrap para que no sobre espacio abajo */
                 .dropdown-menu {
                     list-style: none !important;
-                    padding: 0.25rem 0 !important;
+                    padding: 0 !important;
+                    margin-top: 0.5rem !important;
+                    border-radius: 4px;
+                    overflow: hidden;
                 }
                 .dropdown-menu li {
                     list-style: none !important;
                     margin: 0 !important;
                 }
-                /* Línea divisoria sutil entre opciones del menú */
+                /* Línea divisoria solo entre elementos, excluyendo el último */
                 .dropdown-item-divider {
                     border-bottom: 1px solid #eaeaea;
                 }
-                .dropdown-item-divider:last-child {
-                    border-bottom: none;
+                /* Espaciado generoso para que no se vea apenuscado */
+                .dropdown-item {
+                    padding-top: 10px !important;
+                    padding-bottom: 10px !important;
+                    padding-left: 15px !important;
+                    padding-right: 15px !important;
                 }
             `}</style>
 
