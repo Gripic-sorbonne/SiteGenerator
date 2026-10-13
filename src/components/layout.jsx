@@ -306,8 +306,32 @@ const Header = ({ menuGroups }) => {
 
     return (
         <header>
+            {/* Estilos CSS específicos para limpiar el menú y añadir líneas divisorias */}
+            <style>{`
+                /* Ocultar la flecha por defecto de Bootstrap en el dropdown */
+                .dropdown-toggle::after {
+                    display: none !important;
+                }
+                /* Eliminar viñetas y asegurar limpieza en la lista */
+                .dropdown-menu {
+                    list-style: none !important;
+                    padding: 0.25rem 0 !important;
+                }
+                .dropdown-menu li {
+                    list-style: none !important;
+                    margin: 0 !important;
+                }
+                /* Línea divisoria sutil entre opciones del menú */
+                .dropdown-item-divider {
+                    border-bottom: 1px solid #eaeaea;
+                }
+                .dropdown-item-divider:last-child {
+                    border-bottom: none;
+                }
+            `}</style>
+
             <nav id="header" className="d-flex align-items-center">
-                <a className="header-link" id="header-logo" href="/">
+                <a className="header-link fw-bold" id="header-logo" href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door-fill" viewBox="0 0 16 16" style={{verticalAlign: 'baseline'}}>
                         <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
                     </svg>
@@ -320,21 +344,22 @@ const Header = ({ menuGroups }) => {
 
                     return (
                         <React.Fragment key={group}>
+                            {/* Si el grupo tiene más de 1 elemento, creamos un Dropdown limpio */}
                             {items.length > 1 ? (
                                 <div className="dropdown d-inline-block position-relative mx-2">
                                     <button 
-                                        className="header-link dropdown-toggle bg-transparent border-0 text-decoration-none" 
+                                        className="header-link dropdown-toggle bg-transparent border-0 text-decoration-none fw-bold" 
                                         type="button" 
                                         id={`dropdownMenuButton-${group}`}
                                         data-bs-toggle="dropdown" 
                                         aria-expanded="false"
-                                        style={{ cursor: 'pointer' }}
+                                        style={{ cursor: 'pointer', fontWeight: 'bold' }}
                                     >
                                         {getGroupTitle(group)}
                                     </button>
                                     <ul className="dropdown-menu shadow-sm border-0 mt-2" aria-labelledby={`dropdownMenuButton-${group}`}>
                                         {items.map((item, idx) => (
-                                            <li key={idx}>
+                                            <li key={idx} className="dropdown-item-divider">
                                                 <Link className="dropdown-item py-2" to={item.link}>
                                                     {item.name}
                                                 </Link>
@@ -343,8 +368,8 @@ const Header = ({ menuGroups }) => {
                                     </ul>
                                 </div>
                             ) : (
-                                /* Si el grupo tiene un solo elemento, se pinta como enlace directo */
-                                <Link className="header-link" to={items[0].link}>
+                                /* Enlace directo en negrita si es un único elemento */
+                                <Link className="header-link fw-bold" to={items[0].link} style={{ fontWeight: 'bold' }}>
                                     {items[0].name}
                                 </Link>
                             )}
@@ -358,6 +383,7 @@ const Header = ({ menuGroups }) => {
         </header>
     )
 }
+
 
 export const Tag = ({ tagName, selectedTags, toggleTag, nav = false }) =>
     <a className={"small-tag" + (selectedTags.indexOf(tagName) !== -1 ? " selected" : "")} onClick={() => toggleTag(tagName, nav)}>{tagName}</a>
