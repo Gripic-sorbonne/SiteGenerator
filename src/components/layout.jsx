@@ -299,7 +299,6 @@ const Header = ({ menuGroups }) => {
         }
     }
 
-    // Función para asignar títulos personalizados a los grupos que tienen múltiples elementos (hardcodeado por ahora)
     const getGroupTitle = (groupKey) => {
         if (groupKey === "0") return "Le Laboratoire";
         return `Section ${groupKey}`;
@@ -321,22 +320,22 @@ const Header = ({ menuGroups }) => {
 
                     return (
                         <React.Fragment key={group}>
-                            {/* Si el grupo tiene más de 1 elemento, creamos un Dropdown de Bootstrap */}
                             {items.length > 1 ? (
-                                <div className="dropdown d-inline-block mx-2">
+                                <div className="dropdown d-inline-block position-relative mx-2">
                                     <button 
-                                        className="header-link dropdown-toggle bg-transparent border-0" 
+                                        className="header-link dropdown-toggle bg-transparent border-0 text-decoration-none" 
                                         type="button" 
+                                        id={`dropdownMenuButton-${group}`}
                                         data-bs-toggle="dropdown" 
                                         aria-expanded="false"
                                         style={{ cursor: 'pointer' }}
                                     >
                                         {getGroupTitle(group)}
                                     </button>
-                                    <ul className="dropdown-menu">
+                                    <ul className="dropdown-menu shadow-sm border-0 mt-2" aria-labelledby={`dropdownMenuButton-${group}`}>
                                         {items.map((item, idx) => (
                                             <li key={idx}>
-                                                <Link className="dropdown-item" to={item.link}>
+                                                <Link className="dropdown-item py-2" to={item.link}>
                                                     {item.name}
                                                 </Link>
                                             </li>
