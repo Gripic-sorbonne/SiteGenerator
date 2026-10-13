@@ -1,3 +1,4 @@
+
 const fs = require('fs')
 const path = require('path')
 
@@ -28,6 +29,7 @@ let config = {
     {
       resolve: `gatsby-transformer-remark`,
       options: {
+        gfm: true,
         footnotes: true,
         plugins: [
           // `gatsby-remark-copy-linked-files`,

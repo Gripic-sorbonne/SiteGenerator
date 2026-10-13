@@ -1,44 +1,67 @@
-/* Cartes longues */
+/* Long cards */
 
 .long-card {
-    position: relative;
-    flex: 1 1 32rem;
-    max-width: min(100%, 40rem);
-    height: 15rem;
-    padding: var(--card-padding);
-    border: var(--hr);
-    border-radius: var(--medium-border-radius);
-    transition: 0.1s;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    align-content: center;
-    gap: 1.5rem;
-    background: var(--background-color);
+position: relative;
+flex: 1 1 32rem;
+max-width: min(100%, 40rem);
+height: 15rem;
+padding: var(--card-padding);
+border: var(--hr);
+border-radius: var(--medium-border-radius);
+transition: 0.1s;
+display: flex;
+justify-content: center;
+align-items: stretch;
+align-content: center;
+gap: 1.5rem;
+background: var(--background-color);
 }
 
 .long-card .image-card {
-    flex: 1 1 10rem;
-    max-width: 15rem;
-    margin: calc(0rem - var(--card-padding)) 0 0 calc(0rem - var(--card-padding));
-    height: calc(100% + 2 * var(--card-padding));
-    border-radius: calc(var(--medium-border-radius) - var(--border-width)) 0rem 0rem calc(var(--medium-border-radius) - var(--border-width));
-    z-index: 1;
+flex: 1 1 10rem;
+max-width: 15rem;
+margin: calc(0rem - var(--card-padding)) 0 0 calc(0rem - var(--card-padding));
+height: calc(100% + 2 * var(--card-padding));
+border-radius: calc(var(--medium-border-radius) - var(--border-width)) 0rem 0rem calc(var(--medium-border-radius) - var(--border-width));
+z-index: 1;
 }
 
 .long-card .image-card img {
-    border-radius: 0rem !important;
+border-radius: 0rem !important;
 }
 
 .long-card .description {
-    flex: 1 1 auto;
-    width: 60%;
-    overflow: hidden;
+flex: 1 1 auto;
+width: 60%;
+overflow: hidden;
+line-height: 1.5;
+}
+
+.long-card .description p, .long-card .description div {
+max-width: 80ch;
+line-height: 1.5;
+word-wrap: break-word;
+overflow-wrap: break-word;
 }
 
 .long-card audio {
-    position: relative;
-    z-index: 3;
-    width: 100%;
-    margin: 0rem 0rem var(--in-card-margin) 0rem;
+position: relative;
+z-index: 3;
+width: 100%;
+margin: 0rem 0rem var(--in-card-margin) 0rem;
+}
+
+/* Introduction layout adjustments */
+
+#cards-introduction {
+max-width: 80ch;
+margin-left: auto;
+margin-right: auto;
+white-space: pre-line;
+line-height: 1.6;
+}
+
+#cards-introduction img {
+max-width: 100%;
+height: auto;
 }

@@ -28,9 +28,9 @@ const Home = ({ data }) => {
                 return (
                     <div>
                         <HomeHeader nodes={nodes} />
-                        <h2 ref={lastPosts} id="last-posts">Dernières publications</h2>
+                        <h2 ref={lastPosts} id="last-posts">Dernières èvènements et publications</h2>
                         <div id="cards-container">
-                            {filtered.map((el, index) => <Card postData={el} key={index} toggleTag={toggleTag} selectedTags={tags} />)}
+                            {filtered.slice(0, 8).map((el, index) => <Card postData={el} key={index} toggleTag={toggleTag} selectedTags={tags} />)}
                         </div>
                     </div>
                 )

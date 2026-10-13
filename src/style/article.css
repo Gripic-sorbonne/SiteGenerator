@@ -12,6 +12,11 @@ h1{
     text-align: justify;
 }
 
+#article h1, 
+#article-container h1 {
+    color: var(--text-color);
+    backdrop-filter: none;
+}
 
 #article-header{
     background-image: url("/static/baniere-3c361936712c77fb64679789efa4ea50.jpg");
@@ -267,24 +272,40 @@ a.footnote-backref:hover:after {
     display: block;
 }
 
-details{
-    color: white;
+/* Desplegables (details / summary) */
+
+details {
+    color: var(--text-color);
     border: solid var(--main-border-color) 0.5px;
     border-radius: 5px;
     padding: 0.5rem;   
 }
 
-details:hover{
+details summary {
     cursor: pointer;
     color: var(--main-color);
-    * {
-        cursor:default;
-        color: white;
-    };
-    summary{
-        cursor: pointer;
-        color: var(--main-color)
-    }
+    font-weight: 600;
+}
+
+details:hover {
+    border-color: var(--main-color);
+}
+
+details * {
+    color: var(--text-color);
+}
+
+details a {
+    color: var(--main-color);
+}
+
+details .small-tag {
+    color: var(--main-color) !important;
+    background-color: var(--background-color) !important;
+}
+
+details .small-tag:hover {
+    background-color: var(--hovered-background) !important;
 }
 
 
@@ -429,16 +450,22 @@ only screen and (hover: none) and (pointer: coarse) {
     }
 }
 
-/* Fix for invisible text inside details elements */
-details {
-    color: var(--text-color) !important;
+/* Ajuste de lectura óptimo para el detalle de los artículos */
+#article-container p,
+#article-container li,
+#article p,
+#article li {
+    max-width: 80ch;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
-details:hover * {
-    color: var(--text-color) !important;
-}
-
-details summary {
-    color: var(--main-color);
-    font-weight: 600;
+#article-container {
+    max-width: var(--art-width);
+    margin-inline: auto;
+    padding: 0rem var(--min-margin);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los bloques de texto internos si fuera necesario */
 }

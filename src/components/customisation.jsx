@@ -1,5 +1,5 @@
 import * as React from 'react'
-import LogoSorbonne from '../images/lettres-logo.svg'
+import LogoSorbonne from '../images/logo.svg'
 
 export const Introduction = () => { return (
     <div className="landing-block text">
@@ -36,6 +36,6 @@ export const Footer = () => (
             <p> Pour nous rendre visite : Maison de la Recherche, 28 rue Serpente,
                 75006 Paris, Bureau S007.
             </p>
-            <p>Pour nous contacter : <a href="mailto:lettres-ceres@sorbonne-universite.fr">lettres-ceres@sorbonne-universite.fr</a></p>
+            <p>Pour nous contacter : <a href="mailto: contact@gripic.fr"> contact@gripic.fr</a></p>
         </div>
     </footer>)

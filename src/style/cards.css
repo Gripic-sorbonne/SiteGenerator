@@ -1,31 +1,66 @@
 /* Texte d'introduction */
 
 #cards-introduction {
-    margin: auto;
-    max-width: var(--art-width);
-    padding: 0 var(--min-margin) 3rem var(--min-margin);
+margin: auto;
+max-width: 80ch;
+padding: 0 var(--min-margin) 3rem var(--min-margin);
+line-height: 1.6;
+}
+
+#cards-introduction .cards-introduction-content > h1,
+#cards-introduction .cards-introduction-content > h2,
+#cards-introduction .cards-introduction-content > h3 {
+/* color: #f5a623; /
+/ background: rgba(245, 166, 35, 0.12); */
+color: rgb(10, 25, 75);
+background: rgba(10, 25, 75, 0.12);
+display: inline-block;
+padding: 0.2rem 0.8rem;
+border-radius: 0.2rem;
+text-align: left;
+}
+
+#cards-introduction .cards-introduction-content {
+color: var(--text-color);
+max-width: 80ch;
+margin-left: auto;
+margin-right: auto;
+}
+
+#cards-introduction .cards-introduction-content p {
+margin: 0 0 1rem 0;
+color: var(--text-color);
+max-width: 80ch;
+line-height: 1.6;
 }
 
 /* Petites cartes */
 
 .small-card {
-    position: relative;
-    height: 22rem;
-    flex: 1 1 15rem;
-    max-width: 22rem;
-    padding: 0 var(--card-padding) var(--card-padding) var(--card-padding);
-    border: var(--hr);
-    border-radius: var(--medium-border-radius);
-    transition: var(--transition);
-    overflow: hidden;
+position: relative;
+height: 22rem;
+flex: 1 1 15rem;
+max-width: 22rem;
+padding: 0 var(--card-padding) var(--card-padding) var(--card-padding);
+border: var(--hr);
+border-radius: var(--medium-border-radius);
+transition: var(--transition);
+overflow: hidden;
 }
 
 .small-card .image-card {
-    border-radius: calc(var(--medium-border-radius) - var(--border-width)) calc(var(--medium-border-radius) - var(--border-width)) 0 0;
-    min-width: calc(100% + 2 * var(--card-padding) + 2 * var(--border-width));
-    margin-left: calc(0rem - var(--card-padding) - var(--border-width));
-    margin-top: calc(0rem - var(--border-width));
-    margin-bottom: var(--in-card-margin);
-    height: 11rem;
-    transition: 0.1s ease-in-out !important;
+border-radius: calc(var(--medium-border-radius) - var(--border-width)) calc(var(--medium-border-radius) - var(--border-width)) 0 0;
+min-width: calc(100% + 2 * var(--card-padding) + 2 * var(--border-width));
+margin-left: calc(0rem - var(--card-padding) - var(--border-width));
+margin-top: calc(0rem - var(--border-width));
+margin-bottom: var(--in-card-margin);
+height: 11rem;
+transition: 0.1s ease-in-out !important;
+}
+
+.small-card p, .small-card span, .card p {
+max-width: 80ch;
+line-height: 1.5;
+word-wrap: break-word;
+overflow-wrap: break-word;
 }

@@ -1,16 +1,12 @@
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
-const csv = require('csv-parser');
-const { result } = require('lodash');
-// const thesaurus = require(`./src/data/thesaurus.json`)
+const csv = require('csv-parser')
 
-// ON ENRICHIE LES NODES MARKDOWN AVEC DES FIELDS
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
   
   if (node.internal.type === `MarkdownRemark`) {
-    
     const slug = createFilePath({ node, getNode }).replace('/', '')
     
     createNodeField({
@@ -21,7 +17,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     
     const date = slug.split('_')[0]
 
-    // on ne créé la date que si elle est présente dans le slug
     if(date.match(/\d{4}-\d{2}-\d{2}/)){
       createNodeField({
         node: node,
@@ -42,13 +37,11 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     let images = []
     if(node.frontmatter.image){
       images = [path.join(path.dirname(node.fileAbsolutePath), node.frontmatter.image)]
-      console.log(images)
     }
     else{
       const files = fs.readdirSync(path.dirname(node.fileAbsolutePath)).filter(el => el !== 'index.md')
       images = files.filter(el => el.endsWith('.png') || el.endsWith('.jpeg') || el.endsWith('.jpg') || el.endsWith('.webp'))
     }
-    // const sounds = files.filter(el => el.endsWith('.mp3') || el.endsWith('.wav') || el.endsWith('.ogg'))
     
     createNodeField({
       node: node,
@@ -60,11 +53,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   const dict_prettyNames = {}
-  const { createPage, createRedirect } = actions
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // BLOG POSTS
-  ////////////////////////////////////////////////////////////////////////////////
+  const { createPage } = actions
 
   const result = await graphql(
     `
@@ -86,6 +75,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 title
                 uuid
                 prettyName
+                year
               }
             }
           }
@@ -98,7 +88,7 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors
   }
 
-  // Create all main pages except Accueil
+  // 1. Creer pages principaux du menu basees en siteMetadata
   const pagesToCreate = result.data.site.siteMetadata.pages
 
   pagesToCreate.forEach(page => {
@@ -108,64 +98,93 @@ exports.createPages = async ({ graphql, actions }) => {
       path: `/${pageName}/`,
       component: path.resolve(`./src/templates/${template}.jsx`),
       context: {
-        pageName: pageName
+        pageName: pageName,
+        year: null // Aseguramos que la vista principal no tenga filtro de año
       },
     })
   })
 
-  // Create all pages with the same template, this might change later if we want to do markdown pages with specifics templates
-
-  result.data.allMarkdownRemark.edges.forEach((edge, index) => {
+  result.data.allMarkdownRemark.edges.forEach((edge) => {
     const fields = edge.node.fields;
     const uuid = edge.node.frontmatter.uuid;
     const prettyName = edge.node.frontmatter.prettyName;
 
-    if(fields.slug === ""){
-      return
-    }
+    if(fields.slug === "") return
 
     createPage({
       path: `/${uuid}`,
       component: path.resolve(`./src/templates/blog-post.jsx`),
-      context: {
-        slug: fields.slug,
-        // previous,
-        // next,
-      },
+      context: { slug: fields.slug },
     })
+
     if (prettyName) {
       if (prettyName in dict_prettyNames) {
-        throw Error(`Pretty name ${prettyName} already exists, clash between ${dict_prettyNames[prettyName]} and ${uuid}`);
-        }
+        throw Error(`Pretty name ${prettyName} already exists`);
+      }
       dict_prettyNames[prettyName] = uuid
       createPage({
           path: `/${prettyName}`,
           component: path.resolve(`./src/templates/blog-post.jsx`),
-          context: {
-              slug: fields.slug,
-              // previous,
-              // next,
-          },
+          context: { slug: fields.slug },
       })
       createPage({
           path: `/${prettyName}/`.toLowerCase(),
           component: path.resolve(`./src/templates/blog-post.jsx`),
-          context: {
-              slug: fields.slug,
-              // previous,
-              // next,
-          },
+          context: { slug: fields.slug },
       })
-
     }
+  })
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // 3. PAGING
+  ////////////////////////////////////////////////////////////////////////////////
+
+  const allEdges = result.data.allMarkdownRemark.edges
+
+  // A. Publicaciones por año (usando cards.jsx en lugar de publications.jsx)
+  const publicationsEdges = allEdges.filter(
+    edge => edge.node.fields.collection === "1_cards_publications" || edge.node.fields.collection?.includes("publications")
+  )
+  const pubYears = [...new Set(publicationsEdges.map(e => {
+    if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
+    if (e.node.fields.date) return e.node.fields.date.substring(0, 4);
+    return null;
+  }).filter(Boolean))];
+
+  pubYears.forEach(year => {
+    createPage({
+      path: `/publications/${year}/`,
+      component: path.resolve(`./src/templates/cards.jsx`),
+      context: {
+        pageName: "1_cards_publications",
+        year: year,
+      },
+    })
+  })
+
+  // B. Eventos por año
+  const eventsEdges = allEdges.filter(
+    edge => edge.node.fields.collection === "7_cards_événements" || edge.node.fields.collection?.includes("événements")
+  )
+  const eventYears = [...new Set(eventsEdges.map(e => {
+    if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
+    if (e.node.fields.date) return e.node.fields.date.substring(0, 4);
+    return null;
+  }).filter(Boolean))];
+
+  eventYears.forEach(year => {
+    createPage({
+      path: `/événements/${year}/`,
+      component: path.resolve(`./src/templates/cards.jsx`),
+      context: {
+        pageName: "7_cards_événements",
+        year: year,
+      },
+    })
   })
 }
 
-
-
-
-
-// définir le schéma graphql pour éviter les erreurs de champs manquants
+// DEFINITION DU ESQUEMA GRAPHQL
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
@@ -185,7 +204,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       title: String!
       event: Boolean,
       uuid: String!,
-      prettyName: String
+      prettyName: String,
+      year: String
     }
   `
   createTypes(typeDefs)

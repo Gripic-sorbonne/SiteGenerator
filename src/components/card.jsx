@@ -4,8 +4,6 @@ import * as React from 'react'
 import { Tag } from "./layout"
 import Markdown from 'react-markdown'
 
-
-
 export const Card = ({ postData, toggleTag, selectedTags }) => {
     const { date, slug, image, collection } = postData.fields
     const { title, tags, abstract, uuid, prettyName } = postData.frontmatter
@@ -20,7 +18,7 @@ export const Card = ({ postData, toggleTag, selectedTags }) => {
                 <time dateTime={date}>{date}</time> • <Link className="section-name" to={`/${collection}`}>{collection}</Link>
             </div>
             {tags && (<div className="small-tags-container">
-                {tags ? tags.map(t => <Tag tagName={t} selectedTags={selectedTags} toggleTag={toggleTag} />) : ""}
+                {tags ? tags.map((t, i) => <Tag key={i} tagName={t} selectedTags={selectedTags} toggleTag={toggleTag} />) : ""}
             </div>)}
             <p className="text-sample">
                 <Markdown>{content}</Markdown>
