@@ -268,7 +268,6 @@ const Layout = ({ children, nodes }) => {
 }
 
 const Header = ({ menuGroups }) => {
-    // Estado de React para controlar qué menú desplegable está abierto
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
     const getGroupTitle = (groupKey) => {
@@ -276,7 +275,7 @@ const Header = ({ menuGroups }) => {
         return `Section ${groupKey}`;
     }
 
-    // Cerrar el menú si se hace clic fuera de él
+    // Cerrar el menú al hacer clic fuera de él
     React.useEffect(() => {
         const handleClickOutside = (event) => {
             if (!event.target.closest('.custom-dropdown-container')) {
@@ -290,23 +289,23 @@ const Header = ({ menuGroups }) => {
     return (
         <header>
             <style>{`
-                /* Contenedor del menú desplegable personalizado */
+                /* Contenedor relativo para que el menú cuelgue exactamente debajo de su botón */
                 .custom-dropdown-container {
                     position: relative;
                     display: inline-block;
                 }
 
-                /* Caja blanca del menú */
+                /* Caja del menú desplegable con dimensiones amplias, limpias y profesionales */
                 .custom-dropdown-box {
                     position: absolute;
-                    top: 100%;
+                    top: calc(100% + 12px);
                     left: 0;
-                    min-width: 260px;
+                    min-width: 280px;
                     background-color: #ffffff;
-                    box-shadow: 0px 8px 20px rgba(0,0,0,0.12);
+                    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
                     border-radius: 6px;
                     padding: 0;
-                    margin-top: 10px;
+                    margin: 0;
                     list-style: none !important;
                     z-index: 9999;
                 }
@@ -317,23 +316,24 @@ const Header = ({ menuGroups }) => {
                     padding: 0 !important;
                 }
 
-                /* Estilo de los enlaces internos con espacio holgado y cómodo */
+                /* Opciones del menú con espacio holgado (no apenuscadas) */
                 .custom-dropdown-link {
                     display: block;
                     padding: 14px 20px;
                     color: #212529 !important;
                     text-decoration: none !important;
-                    font-size: 0.95rem;
+                    font-size: 1rem;
                     background-color: transparent;
                     transition: background-color 0.2s ease, color 0.2s ease;
                 }
 
+                /* Al pasar el cursor, solo cambia de color sin solaparse ni tapar nada */
                 .custom-dropdown-link:hover {
-                    background-color: #f8f9fa;
+                    background-color: #f1f3f5;
                     color: #005dff !important;
                 }
 
-                /* Línea divisoria solo entre los elementos (el último no la lleva) */
+                /* Línea divisoria únicamente entre los submenús (el último queda libre) */
                 .custom-menu-divider {
                     border-bottom: 1px solid #eaeaea;
                 }
