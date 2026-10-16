@@ -181,7 +181,6 @@
 
 import { graphql, Link, useStaticQuery } from "gatsby"
 import { Footer } from '../components/customisation.jsx'
-import { transform } from 'lodash'
 import * as React from 'react'
 import '../style/footer.css'
 import '../style/general.css'
@@ -217,7 +216,6 @@ const Layout = ({ children, nodes }) => {
         return { name: name[0].toUpperCase() + name.slice(1), link: `/${name}/`, group }
     })
 
-    // Agrupar páginas por su número de grupo
     const groupedPagesObj = pages.reduce((acc, page) => {
         if (!acc[page.group]) {
             acc[page.group] = []
@@ -226,7 +224,6 @@ const Layout = ({ children, nodes }) => {
         return acc
     }, {})
 
-    // Convertir el objeto agrupado en un array ordenado por grupo
     const menuGroups = Object.keys(groupedPagesObj)
         .sort()
         .map(groupKey => ({
@@ -271,125 +268,117 @@ const Layout = ({ children, nodes }) => {
 }
 
 const Header = ({ menuGroups }) => {
-    const [mode, setMode] = React.useState('light')
-
-    const toggleMode = () => {
-        let newMode = mode === 'dark' ? 'light' : 'dark'
-        setMode(newMode)
-    }
-
-    const changeColor = () => {
-        toggleMode()
-        let root = document.querySelector(':root')
-        root.style.setProperty('--main', colors[mode].main)
-        root.style.setProperty('--text-num', colors[mode]['text-num'])
-        root.style.setProperty('--bg-num', colors[mode]['bg-num'])
-    }
-
-    const colors = {
-        dark: {
-            'main': '132, 177, 255',
-            'text-num': '255',
-            'bg-num': '30'
-        },
-        light: {
-            'main': '0, 93, 255',
-            'text-num': '30',
-            'bg-num': '255'
-        }
-    }
+    // Estado de React para controlar qué menú desplegable está abierto
+    const [openDropdown, setOpenDropdown] = React.useState(null);
 
     const getGroupTitle = (groupKey) => {
         if (groupKey === "0") return "Le Laboratoire";
         return `Section ${groupKey}`;
     }
 
+    // Cerrar el menú si se hace clic fuera de él
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.custom-dropdown-container')) {
+                setOpenDropdown(null);
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
     return (
         <header>
             <style>{`
-                /* Ocultar la flecha por defecto de Bootstrap */
-                .dropdown-toggle::after {
-                    display: none !important;
-                }
-                
-                /* Estilos limpios sobre las clases estándar de Bootstrap para que sí abra y se vea bien */
-                .dropdown-menu {
-                    min-width: 240px !important;
-                    background-color: #ffffff !important;
-                    box-shadow: 0px 8px 16px rgba(0,0,0,0.1) !important;
-                    border: none !important;
-                    border-radius: 6px !important;
-                    padding: 0 !important;
-                    margin-top: 8px !important;
-                    list-style: none !important;
+                /* Contenedor del menú desplegable personalizado */
+                .custom-dropdown-container {
+                    position: relative;
+                    display: inline-block;
                 }
 
-                .dropdown-menu li {
+                /* Caja blanca del menú */
+                .custom-dropdown-box {
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    min-width: 260px;
+                    background-color: #ffffff;
+                    box-shadow: 0px 8px 20px rgba(0,0,0,0.12);
+                    border-radius: 6px;
+                    padding: 0;
+                    margin-top: 10px;
+                    list-style: none !important;
+                    z-index: 9999;
+                }
+
+                .custom-dropdown-box li {
                     list-style: none !important;
                     margin: 0 !important;
                     padding: 0 !important;
                 }
 
-                /* Enlaces internos con buen espacio (no apenuscados) */
-                .dropdown-menu .dropdown-item {
-                    display: block !important;
-                    padding: 12px 20px !important;
+                /* Estilo de los enlaces internos con espacio holgado y cómodo */
+                .custom-dropdown-link {
+                    display: block;
+                    padding: 14px 20px;
                     color: #212529 !important;
                     text-decoration: none !important;
-                    font-size: 0.95rem !important;
-                    background-color: transparent !important;
-                    transition: background-color 0.2s ease !important;
+                    font-size: 0.95rem;
+                    background-color: transparent;
+                    transition: background-color 0.2s ease, color 0.2s ease;
                 }
 
-                .dropdown-menu .dropdown-item:hover {
-                    background-color: #f8f9fa !important;
+                .custom-dropdown-link:hover {
+                    background-color: #f8f9fa;
                     color: #005dff !important;
                 }
 
-                /* Línea divisoria exclusivamente entre los submenús */
-                .dropdown-item-divider {
-                    border-bottom: 1px solid #eaeaea !important;
+                /* Línea divisoria solo entre los elementos (el último no la lleva) */
+                .custom-menu-divider {
+                    border-bottom: 1px solid #eaeaea;
                 }
             `}</style>
 
             <nav id="header" className="d-flex align-items-center">
                 <a className="header-link fw-bold" id="header-logo" href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door-fill" viewBox="0 0 16 16" style={{verticalAlign: 'baseline'}}>
-                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 00.5.5h4a.5.5 0 00.5-.5v-7a.5.5 0 00-.146-.354L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.354 1.146a.5.5 0 00-.708 0l-6 6A.5.5 0 001.5 7.5v7a.5.5 0 00.5.5h4a.5.5 0 00.5-.5" />
+                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
                     </svg>
                 </a>
                 
                 <hr className="header-div-v" />
 
-                {menuGroups.map((groupObj, index) => {
+                {menuGroups.map((groupObj) => {
                     const { group, items } = groupObj;
+                    const isOpen = openDropdown === group;
 
                     return (
                         <React.Fragment key={group}>
                             {items.length > 1 ? (
-                                <div className="dropdown d-inline-block position-relative mx-2">
+                                <div className="custom-dropdown-container mx-2">
                                     <button 
-                                        className="header-link dropdown-toggle bg-transparent border-0 text-decoration-none fw-bold" 
+                                        className="header-link bg-transparent border-0 text-decoration-none fw-bold" 
                                         type="button" 
-                                        id={`dropdownMenuButton-${group}`}
-                                        data-bs-toggle="dropdown" 
-                                        aria-expanded="false"
+                                        onClick={() => setOpenDropdown(isOpen ? null : group)}
                                         style={{ cursor: 'pointer', fontWeight: 'bold' }}
                                     >
                                         {getGroupTitle(group)}
                                     </button>
-                                    <ul className="dropdown-menu shadow-sm" aria-labelledby={`dropdownMenuButton-${group}`}>
-                                        {items.map((item, idx) => {
-                                            const isNotLast = idx < items.length - 1;
-                                            return (
-                                                <li key={idx} className={isNotLast ? "dropdown-item-divider" : ""}>
-                                                    <Link className="dropdown-item" to={item.link}>
-                                                        {item.name}
-                                                    </Link>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
+
+                                    {isOpen && (
+                                        <ul className="custom-dropdown-box">
+                                            {items.map((item, idx) => {
+                                                const isNotLast = idx < items.length - 1;
+                                                return (
+                                                    <li key={idx} className={isNotLast ? "custom-menu-divider" : ""}>
+                                                        <Link className="custom-dropdown-link" to={item.link}>
+                                                            {item.name}
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    )}
                                 </div>
                             ) : (
                                 <Link className="header-link fw-bold" to={items[0].link} style={{ fontWeight: 'bold' }}>
@@ -406,7 +395,6 @@ const Header = ({ menuGroups }) => {
         </header>
     )
 }
-
 
 export const Tag = ({ tagName, selectedTags, toggleTag, nav = false }) =>
     <a className={"small-tag" + (selectedTags.indexOf(tagName) !== -1 ? " selected" : "")} onClick={() => toggleTag(tagName, nav)}>{tagName}</a>
