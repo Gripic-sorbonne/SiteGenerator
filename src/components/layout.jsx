@@ -312,47 +312,42 @@ const Header = ({ menuGroups }) => {
                     display: none !important;
                 }
                 
-                /* Estilo general y limpio para la caja del menú desplegable */
-                .custom-dropdown-menu {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    z-index: 1000;
-                    min-width: 240px;
-                    background-color: #ffffff;
-                    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
-                    border: none;
-                    border-radius: 6px;
+                /* Estilos limpios sobre las clases estándar de Bootstrap para que sí abra y se vea bien */
+                .dropdown-menu {
+                    min-width: 240px !important;
+                    background-color: #ffffff !important;
+                    box-shadow: 0px 8px 16px rgba(0,0,0,0.1) !important;
+                    border: none !important;
+                    border-radius: 6px !important;
                     padding: 0 !important;
                     margin-top: 8px !important;
                     list-style: none !important;
                 }
 
-                /* Mostrar la caja cuando Bootstrap active el dropdown */
-                .dropdown.show .custom-dropdown-menu,
-                .dropdown-menu.show {
-                    display: block !important;
+                .dropdown-menu li {
+                    list-style: none !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
                 }
 
-                /* Cada elemento de la lista */
-                .custom-dropdown-item {
-                    display: block;
+                /* Enlaces internos con buen espacio (no apenuscados) */
+                .dropdown-menu .dropdown-item {
+                    display: block !important;
                     padding: 12px 20px !important;
                     color: #212529 !important;
                     text-decoration: none !important;
-                    font-size: 0.95rem;
-                    background-color: transparent;
-                    transition: background-color 0.2s ease;
+                    font-size: 0.95rem !important;
+                    background-color: transparent !important;
+                    transition: background-color 0.2s ease !important;
                 }
 
-                .custom-dropdown-item:hover {
+                .dropdown-menu .dropdown-item:hover {
                     background-color: #f8f9fa !important;
                     color: #005dff !important;
                 }
 
                 /* Línea divisoria exclusivamente entre los submenús */
-                .custom-divider {
+                .dropdown-item-divider {
                     border-bottom: 1px solid #eaeaea !important;
                 }
             `}</style>
@@ -383,12 +378,12 @@ const Header = ({ menuGroups }) => {
                                     >
                                         {getGroupTitle(group)}
                                     </button>
-                                    <ul className="custom-dropdown-menu" aria-labelledby={`dropdownMenuButton-${group}`}>
+                                    <ul className="dropdown-menu shadow-sm" aria-labelledby={`dropdownMenuButton-${group}`}>
                                         {items.map((item, idx) => {
                                             const isNotLast = idx < items.length - 1;
                                             return (
-                                                <li key={idx} className={isNotLast ? "custom-divider" : ""}>
-                                                    <Link className="custom-dropdown-item" to={item.link}>
+                                                <li key={idx} className={isNotLast ? "dropdown-item-divider" : ""}>
+                                                    <Link className="dropdown-item" to={item.link}>
                                                         {item.name}
                                                     </Link>
                                                 </li>
@@ -411,6 +406,7 @@ const Header = ({ menuGroups }) => {
         </header>
     )
 }
+
 
 export const Tag = ({ tagName, selectedTags, toggleTag, nav = false }) =>
     <a className={"small-tag" + (selectedTags.indexOf(tagName) !== -1 ? " selected" : "")} onClick={() => toggleTag(tagName, nav)}>{tagName}</a>
