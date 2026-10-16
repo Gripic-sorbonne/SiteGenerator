@@ -95,7 +95,7 @@ button.contact:hover:after {
     z-index: 1;
 }
 
-/* Aplicar el margen negativo solo a los elementos directos que no sean nuestro dropdown */
+/* Aplicar el margen negativo solo a los elementos que no sean nuestro dropdown */
 #header > *:not(.custom-dropdown-container) {
     margin-top: -1.5rem;
 }

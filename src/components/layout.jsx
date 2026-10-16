@@ -287,19 +287,21 @@ const Header = ({ menuGroups }) => {
     return (
         <header>
             <style>{`
-                /* Anular el margin-top negativo global del template para nuestro menú */
-                .custom-dropdown-container *, 
-                .custom-dropdown-box *, 
-                .custom-dropdown-box {
-                    margin-top: 0 !important;
-                }
-
+                /* Alineación idéntica al resto de enlaces del header */
                 .custom-dropdown-container {
                     position: relative;
                     display: inline-block;
+                    margin-top: -1.5rem !important;
                 }
 
-                /* Caja desplegable limpia, debajo del botón y con buen tamaño */
+                /* Reseteo estricto solo para los elementos internos de la caja para evitar cruces */
+                .custom-dropdown-box,
+                .custom-dropdown-box li,
+                .custom-dropdown-link {
+                    margin-top: 0 !important;
+                }
+
+                /* Caja desplegable limpia y bien posicionada abajo */
                 .custom-dropdown-box {
                     position: absolute !important;
                     top: 100% !important;
@@ -345,7 +347,7 @@ const Header = ({ menuGroups }) => {
             <nav id="header" className="d-flex align-items-center">
                 <a className="header-link fw-bold" id="header-logo" href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door-fill" viewBox="0 0 16 16" style={{verticalAlign: 'baseline'}}>
-                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 00.5.5h4a.5.5 0 00.5-.5v-7a.5.5 0 00-.146-.354L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.354 1.146a.5.5 0 00-.708 0l-6 6A.5.5 0 001.5 7.5v7a.5.5 0 00.5.5h4a.5.5 0 00.5-.5" />
                     </svg>
                 </a>
                 
