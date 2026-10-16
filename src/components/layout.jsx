@@ -178,7 +178,6 @@
 
 // export default Layout
 
-
 import { graphql, Link, useStaticQuery } from "gatsby"
 import { Footer } from '../components/customisation.jsx'
 import * as React from 'react'
@@ -275,7 +274,6 @@ const Header = ({ menuGroups }) => {
         return `Section ${groupKey}`;
     }
 
-    // Cerrar el menú al hacer clic fuera de él
     React.useEffect(() => {
         const handleClickOutside = (event) => {
             if (!event.target.closest('.custom-dropdown-container')) {
@@ -289,25 +287,31 @@ const Header = ({ menuGroups }) => {
     return (
         <header>
             <style>{`
-                /* Contenedor relativo para que el menú cuelgue exactamente debajo de su botón */
+                /* Anular el margin-top negativo global del template para nuestro menú */
+                .custom-dropdown-container *, 
+                .custom-dropdown-box *, 
+                .custom-dropdown-box {
+                    margin-top: 0 !important;
+                }
+
                 .custom-dropdown-container {
                     position: relative;
                     display: inline-block;
                 }
 
-                /* Caja del menú desplegable con dimensiones amplias, limpias y profesionales */
+                /* Caja desplegable limpia, debajo del botón y con buen tamaño */
                 .custom-dropdown-box {
-                    position: absolute;
-                    top: calc(100% + 12px);
-                    left: 0;
-                    min-width: 280px;
-                    background-color: #ffffff;
-                    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
-                    border-radius: 6px;
-                    padding: 0;
-                    margin: 0;
+                    position: absolute !important;
+                    top: 100% !important;
+                    left: 0 !important;
+                    min-width: 260px !important;
+                    background-color: #ffffff !important;
+                    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15) !important;
+                    border-radius: 6px !important;
+                    padding: 0 !important;
+                    margin-top: 10px !important;
                     list-style: none !important;
-                    z-index: 9999;
+                    z-index: 9999 !important;
                 }
 
                 .custom-dropdown-box li {
@@ -316,26 +320,25 @@ const Header = ({ menuGroups }) => {
                     padding: 0 !important;
                 }
 
-                /* Opciones del menú con espacio holgado (no apenuscadas) */
+                /* Enlaces con espacio holgado y cómodo */
                 .custom-dropdown-link {
-                    display: block;
-                    padding: 14px 20px;
+                    display: block !important;
+                    padding: 14px 20px !important;
                     color: #212529 !important;
                     text-decoration: none !important;
-                    font-size: 1rem;
-                    background-color: transparent;
-                    transition: background-color 0.2s ease, color 0.2s ease;
+                    font-size: 0.95rem !important;
+                    background-color: transparent !important;
+                    transition: background-color 0.2s ease, color 0.2s ease !important;
                 }
 
-                /* Al pasar el cursor, solo cambia de color sin solaparse ni tapar nada */
                 .custom-dropdown-link:hover {
-                    background-color: #f1f3f5;
+                    background-color: #f1f3f5 !important;
                     color: #005dff !important;
                 }
 
-                /* Línea divisoria únicamente entre los submenús (el último queda libre) */
+                /* Línea divisoria solo entre submenús */
                 .custom-menu-divider {
-                    border-bottom: 1px solid #eaeaea;
+                    border-bottom: 1px solid #eaeaea !important;
                 }
             `}</style>
 
