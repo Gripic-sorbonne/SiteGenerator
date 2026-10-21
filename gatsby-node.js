@@ -211,6 +211,7 @@
 //   createTypes(typeDefs)
 // }
 
+
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
@@ -403,6 +404,18 @@ exports.createPages = async ({ graphql, actions }) => {
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
+    type Site implements Node {
+      siteMetadata: SiteSiteMetadata
+    }
+
+    type SiteSiteMetadata {
+      title: String
+      description: String
+      author: String
+      logo: String
+      pages: [String]
+    }
+
     type MarkdownRemark implements Node {
       frontmatter: Frontmatter
       fields: MarkdownRemarkFields
