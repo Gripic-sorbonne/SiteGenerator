@@ -141,21 +141,36 @@ let config = {
 };
 
 console.log(folders)
+
 folders.forEach(folder => {
-  if(!folder.startsWith('_') && fs.statSync(path.join(DIR, folder)).isDirectory() && folder !== '.git' && folder !== ".github"){
-    // Parseo con la nueva sintaxis: grupo__tipo__nombre
+  const fullPath = path.join(DIR, folder);
+  
+  // Verificación estricta: que sea un directorio, no comience con '_' ni sea un archivo oculto/git
+  if (
+    !folder.startsWith('_') && 
+    !folder.startsWith('.') && 
+    fs.existsSync(fullPath) && 
+    fs.statSync(fullPath).isDirectory() && 
+    folder !== '.git' && 
+    folder !== ".github"
+  ) {
+    // Parseo seguro con la nueva sintaxis: grupo__tipo__nombre
     const parts = folder.split('__');
-    const type = parts.length > 1 ? parts[1] : folder;
+    let type = parts.length > 1 ? parts[1] : '';
+
+    // Si por alguna razón no tiene la estructura 'the__type__name', saltamos o asignamos un fallback seguro
+    if (!type || type.trim() === '') {
+      console.warn(`Aviso: La carpeta "${folder}" no cumple con el formato grupo__tipo__nombre.`);
+      return; // Omitimos esta carpeta para que no rompa el plugin de filesystem
+    }
 
     config.plugins.push({
       resolve: 'gatsby-source-filesystem', 
       options: {
         name: type, 
-        path: path.join(DIR, folder)
+        path: fullPath
       }, 
     })
     config.siteMetadata.pages.push(folder)
   }
 })
-
-module.exports = config
