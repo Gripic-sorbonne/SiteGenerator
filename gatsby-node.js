@@ -398,46 +398,35 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-// DEFINICIÓN DEL ESQUEMA GRAPHQL ROBUSTO CON INFERENCIA
+// DEFINICIÓN DEL ESQUEMA GRAPHQL CORREGIDO
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
-    type SiteSiteMetadata {
-      title: String
-      description: String
-      author: String
-      logo: String
-      pages: [String]
-    }
-
-    type MarkdownRemark implements Node @infer {
+    type MarkdownRemark implements Node {
       frontmatter: Frontmatter
       fields: MarkdownRemarkFields
     }
-
-    type MarkdownRemarkFields @infer {
+    type MarkdownRemarkFields {
       slug: String
       date: Date @dateformat
       collection: String
-      image: String
+      image: File @fileByRelativePath
     }
-
-    type Frontmatter @infer {
-      title: String
+    type Frontmatter {
       tags: [String]
       sound: String
       author: String
       authors: String
+      title: String
       abstract: String
-      date: Date @dateformat
+      event: Boolean
+      uuid: String
+      prettyName: String
       year: String
       type: String
       url: String
       publisher: String
       container_title: String
-      event: Boolean
-      uuid: String
-      prettyName: String
       image: File @fileByRelativePath
     }
   `
