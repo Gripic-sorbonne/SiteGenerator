@@ -398,40 +398,11 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-// DEFINICIÓN DEL ESQUEMA GRAPHQL
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
-    type Site implements Node {
-      siteMetadata: SiteSiteMetadata
-    }
-
     type SiteSiteMetadata {
-      title: String
-      description: String
-      author: String
-      logo: String
       pages: [String]
-    }
-
-    type MarkdownRemark implements Node {
-      frontmatter: Frontmatter
-      fields: MarkdownRemarkFields
-    }
-    type MarkdownRemarkFields {
-      slug: String,
-      date: Date @dateformat
-      collection: String
-    }
-    type Frontmatter {
-      tags: [String!]
-      sound: String
-      author: String
-      title: String!
-      event: Boolean,
-      uuid: String!,
-      prettyName: String,
-      year: String
     }
   `
   createTypes(typeDefs)
