@@ -398,11 +398,27 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
+// DEFINICIÓN DEL ESQUEMA GRAPHQL CON INFERENCIA AUTOMÁTICA
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
     type SiteSiteMetadata {
       pages: [String]
+    }
+
+    type MarkdownRemark implements Node @infer {
+      frontmatter: Frontmatter
+      fields: MarkdownRemarkFields
+    }
+
+    type MarkdownRemarkFields @infer {
+      slug: String
+      date: Date @dateformat
+      collection: String
+    }
+
+    type Frontmatter @infer {
+      title: String
     }
   `
   createTypes(typeDefs)
