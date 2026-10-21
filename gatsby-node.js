@@ -301,7 +301,6 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors
   }
 
-  // 1. Crear páginas principales del menú basadas en siteMetadata (con la nueva sintaxis grupo__tipo__nombre)
   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
 
   pagesToCreate.forEach(page => {
@@ -399,19 +398,11 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-// DEFINICIÓN DEL ESQUEMA GRAPHQL (Únicamente para el campo pages del siteMetadata)
+// DEFINICIÓN DEL ESQUEMA GRAPHQL (Únicamente para el campo pages del siteMetadata sin romper nodos)
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
-    type Site implements Node {
-      siteMetadata: SiteSiteMetadata
-    }
-
     type SiteSiteMetadata {
-      title: String
-      description: String
-      author: String
-      logo: String
       pages: [String]
     }
   `
