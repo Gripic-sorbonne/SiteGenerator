@@ -302,24 +302,22 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors
   }
 
-  // 1. Crear páginas principales del menú basadas en siteMetadata (con la nueva sintaxis grupo__tipo__nombre)
-  const pagesToCreate = result.data.site.siteMetadata.pages
+  const pagesToCreate = result.data.site?.siteMetadata?.pages || []
 
-  pagesToCreate.forEach(page => {
-    const parts = page.split('__')
-    const template = parts.length > 1 ? parts[1] : 'cards'
-    const pageName = parts.length > 2 ? parts[2] : parts[0]
+    pagesToCreate.forEach(page => {
+      const parts = page.split('__')
+      const template = parts.length > 1 ? parts[1] : 'cards'
+      const pageName = parts.length > 2 ? parts[2] : parts[0]
 
-    createPage({
-      path: `/${pageName}/`,
-      component: path.resolve(`./src/templates/${template}.jsx`),
-      context: {
-        pageName: pageName,
-        year: null 
-      },
+      createPage({
+        path: `/${pageName}/`,
+        component: path.resolve(`./src/templates/${template}.jsx`),
+        context: {
+          pageName: pageName,
+          year: null 
+        },
+      })
     })
-  })
-
   result.data.allMarkdownRemark.edges.forEach((edge) => {
     const fields = edge.node.fields;
     const uuid = edge.node.frontmatter.uuid;
