@@ -397,3 +397,49 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 }
+
+// DEFINICIÓN DEL ESQUEMA GRAPHQL ROBUSTO CON INFERENCIA
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type SiteSiteMetadata {
+      title: String
+      description: String
+      author: String
+      logo: String
+      pages: [String]
+    }
+
+    type MarkdownRemark implements Node @infer {
+      frontmatter: Frontmatter
+      fields: MarkdownRemarkFields
+    }
+
+    type MarkdownRemarkFields @infer {
+      slug: String
+      date: Date @dateformat
+      collection: String
+      image: String
+    }
+
+    type Frontmatter @infer {
+      title: String
+      tags: [String]
+      sound: String
+      author: String
+      authors: String
+      abstract: String
+      date: Date @dateformat
+      year: String
+      type: String
+      url: String
+      publisher: String
+      container_title: String
+      event: Boolean
+      uuid: String
+      prettyName: String
+      image: File @fileByRelativePath
+    }
+  `
+  createTypes(typeDefs)
+}
