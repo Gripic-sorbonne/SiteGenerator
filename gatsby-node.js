@@ -397,14 +397,3 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 }
-
-// DEFINICIÓN DEL ESQUEMA GRAPHQL (Únicamente para el campo pages del siteMetadata sin romper nodos)
-exports.createSchemaCustomization = ({ actions }) => {
-  const { createTypes } = actions
-  const typeDefs = `
-    type SiteSiteMetadata {
-      pages: [String]
-    }
-  `
-  createTypes(typeDefs)
-}

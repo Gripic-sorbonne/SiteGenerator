@@ -82,6 +82,7 @@
 
 // module.exports = config
 
+
 const fs = require('fs')
 const path = require('path')
 
@@ -93,8 +94,7 @@ const siteConfig = JSON.parse(fs.readFileSync('siteConfig.json', 'utf8'));
 let config = {
   siteMetadata: {
     ...siteConfig,
-    authors: [
-    ],
+    authors: [],
     pages: []
   },
   plugins: [
@@ -145,7 +145,7 @@ console.log(folders)
 folders.forEach(folder => {
   const fullPath = path.join(DIR, folder);
   
-  // Verificación estricta: que sea un directorio, no comience con '_' ni sea un archivo oculto/git
+  // Verificación estricta: directorio válido que no comience con '_' o '.'
   if (
     !folder.startsWith('_') && 
     !folder.startsWith('.') && 
@@ -154,14 +154,13 @@ folders.forEach(folder => {
     folder !== '.git' && 
     folder !== ".github"
   ) {
-    // Parseo seguro con la nueva sintaxis: grupo__tipo__nombre
+    // Extraemos el tipo usando la convención moderna: grupo__tipo__nombre
     const parts = folder.split('__');
     let type = parts.length > 1 ? parts[1] : '';
 
-    // Si por alguna razón no tiene la estructura 'the__type__name', saltamos o asignamos un fallback seguro
     if (!type || type.trim() === '') {
       console.warn(`Aviso: La carpeta "${folder}" no cumple con el formato grupo__tipo__nombre.`);
-      return; // Omitimos esta carpeta para que no rompa el plugin de filesystem
+      return;
     }
 
     config.plugins.push({
@@ -174,3 +173,5 @@ folders.forEach(folder => {
     config.siteMetadata.pages.push(folder)
   }
 })
+
+module.exports = config
