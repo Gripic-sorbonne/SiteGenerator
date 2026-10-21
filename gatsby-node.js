@@ -211,7 +211,6 @@
 //   createTypes(typeDefs)
 // }
 
-
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
@@ -302,22 +301,24 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors
   }
 
+  // 1. Crear páginas principales del menú basadas en siteMetadata (con la nueva sintaxis grupo__tipo__nombre)
   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
 
-    pagesToCreate.forEach(page => {
-      const parts = page.split('__')
-      const template = parts.length > 1 ? parts[1] : 'cards'
-      const pageName = parts.length > 2 ? parts[2] : parts[0]
+  pagesToCreate.forEach(page => {
+    const parts = page.split('__')
+    const template = parts.length > 1 ? parts[1] : 'cards'
+    const pageName = parts.length > 2 ? parts[2] : parts[0]
 
-      createPage({
-        path: `/${pageName}/`,
-        component: path.resolve(`./src/templates/${template}.jsx`),
-        context: {
-          pageName: pageName,
-          year: null 
-        },
-      })
+    createPage({
+      path: `/${pageName}/`,
+      component: path.resolve(`./src/templates/${template}.jsx`),
+      context: {
+        pageName: pageName,
+        year: null 
+      },
     })
+  })
+
   result.data.allMarkdownRemark.edges.forEach((edge) => {
     const fields = edge.node.fields;
     const uuid = edge.node.frontmatter.uuid;
@@ -398,27 +399,20 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-// DEFINICIÓN DEL ESQUEMA GRAPHQL CON INFERENCIA AUTOMÁTICA
+// DEFINICIÓN DEL ESQUEMA GRAPHQL (Únicamente para el campo pages del siteMetadata)
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
+    type Site implements Node {
+      siteMetadata: SiteSiteMetadata
+    }
+
     type SiteSiteMetadata {
-      pages: [String]
-    }
-
-    type MarkdownRemark implements Node @infer {
-      frontmatter: Frontmatter
-      fields: MarkdownRemarkFields
-    }
-
-    type MarkdownRemarkFields @infer {
-      slug: String
-      date: Date @dateformat
-      collection: String
-    }
-
-    type Frontmatter @infer {
       title: String
+      description: String
+      author: String
+      logo: String
+      pages: [String]
     }
   `
   createTypes(typeDefs)
