@@ -145,7 +145,6 @@ console.log(folders)
 folders.forEach(folder => {
   const fullPath = path.join(DIR, folder);
   
-  // Verificación estricta: directorio válido que no comience con '_' o '.'
   if (
     !folder.startsWith('_') && 
     !folder.startsWith('.') && 
@@ -154,19 +153,22 @@ folders.forEach(folder => {
     folder !== '.git' && 
     folder !== ".github"
   ) {
-    // Extraemos el tipo usando la convención moderna: grupo__tipo__nombre
-    const parts = folder.split('__');
-    let type = parts.length > 1 ? parts[1] : '';
+    // Limpiamos el prefijo numérico (ej: "01_le_gripic__longcards__qui_sommes-nous" -> "le_gripic__longcards__qui_sommes-nous")
+    const cleanFolder = folder.replace(/^\d+_/, '');
+    const parts = cleanFolder.split('__');
+    
+    // Obtenemos el nombre exacto de la página para que coincida con las plantillas y consultas de GraphQL
+    let pageName = parts.length > 2 ? parts[2] : (parts.length > 1 ? parts[1] : parts[0]);
 
-    if (!type || type.trim() === '') {
-      console.warn(`Aviso: La carpeta "${folder}" no cumple con el formato grupo__tipo__nombre.`);
+    if (!pageName || pageName.trim() === '') {
+      console.warn(`Aviso: La carpeta "${folder}" no cumple con el formato esperado.`);
       return;
     }
 
     config.plugins.push({
       resolve: 'gatsby-source-filesystem', 
       options: {
-        name: type, 
+        name: pageName, 
         path: fullPath
       }, 
     })
