@@ -124,7 +124,7 @@ let config = {
             resolve: `gatsby-remark-responsive-iframe`,
           },
           `gatsby-remark-prismjs`,
-          `gatsby-remark-smartypants`,
+          // `gatsby-remark-smartypants`,
           `gatsby-remark-autolink-headers`
         ],
       },

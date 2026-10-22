@@ -252,7 +252,6 @@
 
 // export default Layout
 
-
 import { graphql, Link, useStaticQuery } from "gatsby"
 import { Footer } from '../components/customisation.jsx'
 import * as React from 'react'
@@ -285,13 +284,13 @@ const Layout = ({ children, nodes }) => {
         document.title = data.site.siteMetadata.title
     }, [])
 
-    // Parseo de páginas con la sintaxis nombre_menu__tipo__nombre_subpagina
+    // Parseo de páginas limpiando el prefijo numérico (ej: 01_)
     const pages = data.site.siteMetadata.pages.map(page => {
-        const parts = page.split('__');
+        const cleanPage = page.replace(/^\d+_/, '');
+        const parts = cleanPage.split('__');
         const rawGroup = parts[0] || 'general';
-        const rawName = parts[2] || parts[1] || page;
+        const rawName = parts[2] || parts[1] || cleanPage;
         
-        // Formatear nombres limpiando guiones bajos y capitalizando
         const formattedName = rawName.replace(/_/g, ' ');
         const formattedGroup = rawGroup.replace(/_/g, ' ');
 
@@ -310,6 +309,7 @@ const Layout = ({ children, nodes }) => {
         return acc
     }, {})
 
+    // Mantiene el orden estricto de inserción (que sigue el orden numérico del CSV)
     const menuGroups = Object.keys(groupedPagesObj)
         .map(groupKey => ({
             group: groupKey,
@@ -355,7 +355,6 @@ const Layout = ({ children, nodes }) => {
 const Header = ({ menuGroups }) => {
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
-    // Se elimina el hardcodeo; el título del menú desplegable se toma directamente del grupo formateado
     const getGroupTitle = (groupKey) => {
         return groupKey;
     }

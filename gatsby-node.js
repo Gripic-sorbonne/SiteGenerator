@@ -211,10 +211,11 @@
 //   createTypes(typeDefs)
 // }
 
+
+
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
-const csv = require('csv-parser')
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
@@ -229,7 +230,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
     
     const date = slug.split('_')[0]
-
     if(date.match(/\d{4}-\d{2}-\d{2}/)){
       createNodeField({
         node: node,
@@ -304,7 +304,9 @@ exports.createPages = async ({ graphql, actions }) => {
   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
 
   pagesToCreate.forEach(page => {
-    const parts = page.split('__')
+    // Quitamos el prefijo numérico si existe (ej: "01_activite..." -> "activite...")
+    const cleanPage = page.replace(/^\d+_/, '')
+    const parts = cleanPage.split('__')
     const template = parts.length > 1 ? parts[1] : 'cards'
     const pageName = parts.length > 2 ? parts[2] : parts[0]
 
@@ -349,13 +351,8 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   })
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // 3. PAGING
-  ////////////////////////////////////////////////////////////////////////////////
-
   const allEdges = result.data.allMarkdownRemark.edges
 
-  // A. Publicaciones por año
   const publicationsEdges = allEdges.filter(
     edge => edge.node.fields.collection === "publications" || edge.node.fields.collection?.includes("publications")
   )
@@ -376,7 +373,6 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
-  // B. Eventos por año
   const eventsEdges = allEdges.filter(
     edge => edge.node.fields.collection === "événements" || edge.node.fields.collection?.includes("événements")
   )
@@ -398,35 +394,45 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-// DEFINICIÓN DEL ESQUEMA GRAPHQL CORREGIDO
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
-    type MarkdownRemark implements Node {
+    type SiteSiteMetadata {
+      title: String
+      description: String
+      author: String
+      logo: String
+      pages: [String]
+    }
+
+    type MarkdownRemark implements Node @infer {
       frontmatter: Frontmatter
       fields: MarkdownRemarkFields
     }
-    type MarkdownRemarkFields {
+
+    type MarkdownRemarkFields @infer {
       slug: String
       date: Date @dateformat
       collection: String
-      image: File @fileByRelativePath
+      image: String
     }
-    type Frontmatter {
+
+    type Frontmatter @infer {
+      title: String
       tags: [String]
       sound: String
       author: String
       authors: String
-      title: String
       abstract: String
-      event: Boolean
-      uuid: String
-      prettyName: String
+      date: Date @dateformat
       year: String
       type: String
       url: String
       publisher: String
       container_title: String
+      event: Boolean
+      uuid: String
+      prettyName: String
       image: File @fileByRelativePath
     }
   `
