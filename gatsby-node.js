@@ -211,8 +211,6 @@
 //   createTypes(typeDefs)
 // }
 
-
-
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
@@ -414,7 +412,6 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       date: Date @dateformat
       collection: String
-      image: String
     }
 
     type Frontmatter @infer {

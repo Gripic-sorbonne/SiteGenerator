@@ -384,11 +384,13 @@ const Header = ({ menuGroups }) => {
                     margin-top: 0 !important;
                 }
 
+                /* Caja desplegable adaptativa para textos largos */
                 .custom-dropdown-box {
                     position: absolute !important;
                     top: 100% !important;
                     left: 0 !important;
-                    min-width: 260px !important;
+                    min-width: 280px !important;
+                    max-width: 360px !important;
                     background-color: #ffffff !important;
                     box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15) !important;
                     border-radius: 6px !important;
@@ -404,12 +406,16 @@ const Header = ({ menuGroups }) => {
                     padding: 0 !important;
                 }
 
+                /* Enlaces con salto de línea automático y espaciado optimizado */
                 .custom-dropdown-link {
                     display: block !important;
-                    padding: 14px 20px !important;
+                    padding: 12px 18px !important;
                     color: #212529 !important;
                     text-decoration: none !important;
-                    font-size: 0.95rem !important;
+                    font-size: 0.9rem !important;
+                    white-space: normal !important;
+                    word-break: break-word !important;
+                    line-height: 1.35 !important;
                     background-color: transparent !important;
                     transition: background-color 0.2s ease, color 0.2s ease !important;
                 }
