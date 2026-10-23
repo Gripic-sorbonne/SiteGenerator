@@ -228,7 +228,6 @@
 
 
 
-
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
@@ -263,7 +262,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       value: collection,
     })
 
-    // Mantenemos fields.image como String para compatibilidad total con consultas existentes
+    // Resolver la imagen para fields.image de forma que apunte al archivo físico
     let images = []
     if (node.frontmatter && node.frontmatter.image) {
       images = [path.join(path.dirname(node.fileAbsolutePath), node.frontmatter.image)]
@@ -299,7 +298,6 @@ exports.createPages = async ({ graphql, actions }) => {
                 slug
                 date
                 collection
-                image
               }
               frontmatter {
                 title
@@ -430,7 +428,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       date: Date @dateformat
       collection: String
-      image: String
+      image: File @fileByRelativePath
     }
 
     type Frontmatter @infer {
