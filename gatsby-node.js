@@ -1,7 +1,6 @@
 // const { createFilePath } = require(`gatsby-source-filesystem`)
 // const path = require(`path`)
 // const fs = require('fs')
-// const csv = require('csv-parser')
 
 // exports.onCreateNode = ({ node, actions, getNode }) => {
 //   const { createNodeField } = actions
@@ -16,7 +15,6 @@
 //     })
     
 //     const date = slug.split('_')[0]
-
 //     if(date.match(/\d{4}-\d{2}-\d{2}/)){
 //       createNodeField({
 //         node: node,
@@ -88,18 +86,21 @@
 //     throw result.errors
 //   }
 
-//   // 1. Creer pages principaux du menu basees en siteMetadata
-//   const pagesToCreate = result.data.site.siteMetadata.pages
+//   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
 
 //   pagesToCreate.forEach(page => {
-//     const [_, template, pageName] = page.split('_')
+//     // Quitamos el prefijo numérico si existe (ej: "01_activite..." -> "activite...")
+//     const cleanPage = page.replace(/^\d+_/, '')
+//     const parts = cleanPage.split('__')
+//     const template = parts.length > 1 ? parts[1] : 'cards'
+//     const pageName = parts.length > 2 ? parts[2] : parts[0]
 
 //     createPage({
 //       path: `/${pageName}/`,
 //       component: path.resolve(`./src/templates/${template}.jsx`),
 //       context: {
 //         pageName: pageName,
-//         year: null // Aseguramos que la vista principal no tenga filtro de año
+//         year: null 
 //       },
 //     })
 //   })
@@ -135,15 +136,10 @@
 //     }
 //   })
 
-//   ////////////////////////////////////////////////////////////////////////////////
-//   // 3. PAGING
-//   ////////////////////////////////////////////////////////////////////////////////
-
 //   const allEdges = result.data.allMarkdownRemark.edges
 
-//   // A. Publicaciones por año (usando cards.jsx en lugar de publications.jsx)
 //   const publicationsEdges = allEdges.filter(
-//     edge => edge.node.fields.collection === "1_cards_publications" || edge.node.fields.collection?.includes("publications")
+//     edge => edge.node.fields.collection === "publications" || edge.node.fields.collection?.includes("publications")
 //   )
 //   const pubYears = [...new Set(publicationsEdges.map(e => {
 //     if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
@@ -156,15 +152,14 @@
 //       path: `/publications/${year}/`,
 //       component: path.resolve(`./src/templates/cards.jsx`),
 //       context: {
-//         pageName: "1_cards_publications",
+//         pageName: "publications",
 //         year: year,
 //       },
 //     })
 //   })
 
-//   // B. Eventos por año
 //   const eventsEdges = allEdges.filter(
-//     edge => edge.node.fields.collection === "7_cards_événements" || edge.node.fields.collection?.includes("événements")
+//     edge => edge.node.fields.collection === "événements" || edge.node.fields.collection?.includes("événements")
 //   )
 //   const eventYears = [...new Set(eventsEdges.map(e => {
 //     if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
@@ -177,39 +172,58 @@
 //       path: `/événements/${year}/`,
 //       component: path.resolve(`./src/templates/cards.jsx`),
 //       context: {
-//         pageName: "7_cards_événements",
+//         pageName: "événements",
 //         year: year,
 //       },
 //     })
 //   })
 // }
 
-// // DEFINITION DU ESQUEMA GRAPHQL
 // exports.createSchemaCustomization = ({ actions }) => {
 //   const { createTypes } = actions
 //   const typeDefs = `
-//     type MarkdownRemark implements Node {
+//     type SiteSiteMetadata {
+//       title: String
+//       description: String
+//       author: String
+//       logo: String
+//       pages: [String]
+//     }
+
+//     type MarkdownRemark implements Node @infer {
 //       frontmatter: Frontmatter
 //       fields: MarkdownRemarkFields
 //     }
-//     type MarkdownRemarkFields {
-//       slug: String,
+
+//     type MarkdownRemarkFields @infer {
+//       slug: String
 //       date: Date @dateformat
 //       collection: String
 //     }
-//     type Frontmatter {
-//       tags: [String!]
+
+//     type Frontmatter @infer {
+//       title: String
+//       tags: [String]
 //       sound: String
 //       author: String
-//       title: String!
-//       event: Boolean,
-//       uuid: String!,
-//       prettyName: String,
+//       authors: String
+//       abstract: String
+//       date: Date @dateformat
 //       year: String
+//       type: String
+//       url: String
+//       publisher: String
+//       container_title: String
+//       event: Boolean
+//       uuid: String
+//       prettyName: String
+//       image: File @fileByRelativePath
 //     }
 //   `
 //   createTypes(typeDefs)
 // }
+
+
 
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
@@ -243,21 +257,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       node: node,
       name: `collection`,
       value: collection,
-    })
-
-    let images = []
-    if(node.frontmatter.image){
-      images = [path.join(path.dirname(node.fileAbsolutePath), node.frontmatter.image)]
-    }
-    else{
-      const files = fs.readdirSync(path.dirname(node.fileAbsolutePath)).filter(el => el !== 'index.md')
-      images = files.filter(el => el.endsWith('.png') || el.endsWith('.jpeg') || el.endsWith('.jpg') || el.endsWith('.webp'))
-    }
-    
-    createNodeField({
-      node: node,
-      name: "image",
-      value: images[0] ?? null
     })
   }
 }
@@ -302,7 +301,6 @@ exports.createPages = async ({ graphql, actions }) => {
   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
 
   pagesToCreate.forEach(page => {
-    // Quitamos el prefijo numérico si existe (ej: "01_activite..." -> "activite...")
     const cleanPage = page.replace(/^\d+_/, '')
     const parts = cleanPage.split('__')
     const template = parts.length > 1 ? parts[1] : 'cards'
