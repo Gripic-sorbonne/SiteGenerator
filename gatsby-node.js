@@ -246,7 +246,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
     
     const date = slug.split('_')[0]
-    if(date.match(/\d{4}-\d{2}-\d{2}/)){
+    if (date.match(/\d{4}-\d{2}-\d{2}/)) {
       createNodeField({
         node: node,
         name: `date`,
@@ -261,6 +261,21 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       node: node,
       name: `collection`,
       value: collection,
+    })
+
+    // Mantenemos fields.image como String para compatibilidad total con consultas existentes
+    let images = []
+    if (node.frontmatter && node.frontmatter.image) {
+      images = [path.join(path.dirname(node.fileAbsolutePath), node.frontmatter.image)]
+    } else {
+      const files = fs.readdirSync(path.dirname(node.fileAbsolutePath)).filter(el => el !== 'index.md')
+      images = files.filter(el => el.endsWith('.png') || el.endsWith('.jpeg') || el.endsWith('.jpg') || el.endsWith('.webp'))
+    }
+    
+    createNodeField({
+      node: node,
+      name: "image",
+      value: images[0] ?? null,
     })
   }
 }
@@ -284,6 +299,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 slug
                 date
                 collection
+                image
               }
               frontmatter {
                 title
@@ -325,7 +341,7 @@ exports.createPages = async ({ graphql, actions }) => {
     const uuid = edge.node.frontmatter.uuid;
     const prettyName = edge.node.frontmatter.prettyName;
 
-    if(fields.slug === "") return
+    if (!fields || fields.slug === "") return
 
     createPage({
       path: `/${uuid}`,
@@ -414,6 +430,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       date: Date @dateformat
       collection: String
+      image: String
     }
 
     type Frontmatter @infer {
