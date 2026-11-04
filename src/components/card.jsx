@@ -5,8 +5,8 @@
 // import Markdown from 'react-markdown'
 
 // export const Card = ({ postData, toggleTag, selectedTags }) => {
-//     const { date, slug, image, collection } = postData.fields
-//     const { title, tags, abstract, uuid, prettyName } = postData.frontmatter
+//     const { date, slug, collection } = postData.fields
+//     const { title, tags, abstract, uuid, prettyName, image } = postData.frontmatter
 //     const content = abstract ? abstract : postData.excerpt
 
 //     return (
@@ -27,7 +27,6 @@
 //     )
 // }
 
-
 import { Link } from "gatsby"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import * as React from 'react'
@@ -35,8 +34,9 @@ import { Tag } from "./layout"
 import Markdown from 'react-markdown'
 
 export const Card = ({ postData, toggleTag, selectedTags }) => {
-    const { date, slug, collection } = postData.fields
-    const { title, tags, abstract, uuid, prettyName, image } = postData.frontmatter
+    // Corregido: Obtenemos 'image' desde postData.fields, que es donde la consulta GraphQL la entrega
+    const { date, slug, collection, image } = postData.fields
+    const { title, tags, abstract, uuid, prettyName } = postData.frontmatter
     const content = abstract ? abstract : postData.excerpt
 
     return (

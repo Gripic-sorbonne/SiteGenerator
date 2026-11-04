@@ -1,12 +1,13 @@
+
+
 // import { Link } from "gatsby"
 // import { GatsbyImage, getImage } from "gatsby-plugin-image"
 // import * as React from 'react'
 // import { Tag } from "./layout"
 
-
 // export const LongCard = ({ postData, toggleTag, selectedTags }) => {
-//     const { date, slug, image, collection } = postData.fields
-//     const { title, tags, abstract, sound, uuid, prettyName } = postData.frontmatter
+//     const { date, slug, collection } = postData.fields
+//     const { title, tags, abstract, sound, uuid, prettyName, image } = postData.frontmatter
 
 //     return (
 //         <div className="long-card">
@@ -26,7 +27,7 @@
 //                         <time dateTime={date}>{date}</time> • <Link className="section-name" to={`/${collection}`}>{collection}</Link>
 //                     </div>)}
 //                 {tags && (<div className="small-tags-container">
-//                     {tags ? tags.map(t => <Tag tagName={t} selectedTags={selectedTags} toggleTag={toggleTag} />) : ""}
+//                     {tags ? tags.map(t => <Tag key={t} tagName={t} selectedTags={selectedTags} toggleTag={toggleTag} />) : ""}
 //                 </div>)}
 //                 <p className="text-sample">
 //                     {abstract ? abstract : postData.excerpt}
@@ -36,14 +37,17 @@
 //     )
 // }
 
+
+
 import { Link } from "gatsby"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import * as React from 'react'
 import { Tag } from "./layout"
 
 export const LongCard = ({ postData, toggleTag, selectedTags }) => {
-    const { date, slug, collection } = postData.fields
-    const { title, tags, abstract, sound, uuid, prettyName, image } = postData.frontmatter
+    // Corregido: Obtenemos 'image' desde postData.fields
+    const { date, slug, collection, image } = postData.fields
+    const { title, tags, abstract, sound, uuid, prettyName } = postData.frontmatter
 
     return (
         <div className="long-card">
