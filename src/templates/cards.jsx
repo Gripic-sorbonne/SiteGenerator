@@ -7,12 +7,22 @@ import "../style/accueil.css"
 import "../style/cards.css"
 
 const CardsLayout = ({ data, pageContext }) => {
-    const allNodes = data.allMarkdownRemark.nodes.filter(n => !n.fields.slug.startsWith('_'))
     const { year, pageName } = pageContext;
-
-    const isEvents = pageName === "7_cards_événements" || pageName === "événements";
+    const isEvents = pageName === "7_cards_événements" || pageName === "événements" || pageName?.includes("événements");
     const basePath = isEvents ? "/événements" : "/publications";
 
+    // Filtrado robusto en JS para evitar conflictos con nombres largos o truncados de Excel
+    const allNodes = data.allMarkdownRemark.nodes.filter(n => {
+        if (n.fields.slug.startsWith('_')) return false;
+        if (!pageName) return true;
+        const col = n.fields.collection || "";
+        if (isEvents) {
+            return col.includes("événements") || col.includes("evenements");
+        }
+        return col === pageName || col.includes(pageName);
+    });
+
+    // 1. Extraer dinámicamente todos los años únicos disponibles
     const availableYears = React.useMemo(() => {
         const years = allNodes.map(node => {
             if (node.frontmatter && node.frontmatter.year) return String(node.frontmatter.year);
@@ -25,8 +35,9 @@ const CardsLayout = ({ data, pageContext }) => {
         return [...new Set(years)].sort((a, b) => b - a);
     }, [allNodes]);
 
+    // 2. Si estamos en una vista de año específica, filtramos los nodos para ese año
     const nodes = year 
-        ? allNodes.filter(node => String(node.frontmatter?.year) === String(year))
+        ? allNodes.filter(node => String(node.frontmatter?.year) === String(year) || (node.fields?.date && node.fields.date.startsWith(String(year))))
         : allNodes;
 
     return (
@@ -86,12 +97,9 @@ const CardsLayout = ({ data, pageContext }) => {
 }
 
 export const query = graphql`
-    query MyQuery($pageName: String = "") {
+    query MyQuery {
         allMarkdownRemark(
-            sort: {fields: {date: DESC}},
-            filter: {
-                fields: {collection: {eq: $pageName}}
-            }
+            sort: {fields: {date: DESC}}
             limit: 999
         ) {
             nodes {
