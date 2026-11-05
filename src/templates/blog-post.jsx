@@ -15,9 +15,7 @@ const BlogPost = ({ data, children }) => {
     const date = data.markdownRemark.fields.date
     const { author, title, tags, abstract, sound } = data.markdownRemark.frontmatter
     const authorName = author ? author : ""
-    // React.useEffect(() => {
-    //   document.querySelector('body').style.setProperty('--random-rotate', `${getRandomIntInclusive(20, 340)}deg`) 
-    // }, []);
+    
     return (
         <Layout>
             <main>
@@ -35,7 +33,6 @@ const BlogPost = ({ data, children }) => {
                               {tags ? tags.map((el, i) => <a className="tag" key={i} >{el}</a>) : ''}
                           </div>)}
                         </div>
-                        {/* <img id="landing-image" src={Planet} style={{ maxWidth: "100%", margin: 0 }} /> */}
                     </header>
                 <div id="article-container">
                     <article id="article">
@@ -74,6 +71,8 @@ export const query = graphql`
         sound
         uuid
         prettyName
+        event
+        year
       }
       fields {
         date(formatString: "DD MMMM, YYYY", locale: "fr")

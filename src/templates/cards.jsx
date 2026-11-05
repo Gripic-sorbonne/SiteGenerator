@@ -7,14 +7,12 @@ import "../style/accueil.css"
 import "../style/cards.css"
 
 const CardsLayout = ({ data, pageContext }) => {
-    // Obtenemos todos los nodos (filtrando los que empiezan con guion bajo)
     const allNodes = data.allMarkdownRemark.nodes.filter(n => !n.fields.slug.startsWith('_'))
     const { year, pageName } = pageContext;
 
     const isEvents = pageName === "7_cards_événements" || pageName === "événements";
     const basePath = isEvents ? "/événements" : "/publications";
 
-    // 1. Extraer dinámicamente todos los años únicos disponibles en la colección
     const availableYears = React.useMemo(() => {
         const years = allNodes.map(node => {
             if (node.frontmatter && node.frontmatter.year) return String(node.frontmatter.year);
@@ -24,10 +22,9 @@ const CardsLayout = ({ data, pageContext }) => {
             }
             return null;
         }).filter(Boolean);
-        return [...new Set(years)].sort((a, b) => b - a); // Ordenar de más reciente a más antiguo
+        return [...new Set(years)].sort((a, b) => b - a);
     }, [allNodes]);
 
-    // 2. Si estamos en una subpágina de año específica, filtramos los nodos para ese año exacto
     const nodes = year 
         ? allNodes.filter(node => String(node.frontmatter?.year) === String(year))
         : allNodes;
@@ -49,7 +46,6 @@ const CardsLayout = ({ data, pageContext }) => {
                             </header>
                         )}
 
-                        {/* Menú de Pestañas / Enlaces de Navegación por Año */}
                         {availableYears.length > 0 && (
                             <div className="small-tags-container" style={{ margin: "1.5rem 0", textAlign: "center" }}>
                                 <Link
@@ -72,7 +68,6 @@ const CardsLayout = ({ data, pageContext }) => {
                             </div>
                         )}
 
-                        {/* Indicador de la vista actual si hay un año seleccionado */}
                         {year && (
                             <div style={{ margin: "1rem 0", textAlign: "center" }}>
                                 <h3>{isEvents ? "Événements" : "Publications"} pour l'année : {year}</h3>
@@ -110,6 +105,7 @@ export const query = graphql`
                     uuid
                     prettyName
                     year
+                    event
                 }
                 fields {
                     collection

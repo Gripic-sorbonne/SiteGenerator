@@ -5,7 +5,6 @@ import { Card } from "../components/card"
 export default function PublicationsTemplate({ data, pageContext }) {
   const allPosts = data.allMarkdownRemark.nodes
   
-  // Filtrar de manera segura en JavaScript por el año correspondiente
   const posts = allPosts.filter(post => {
     const dateStr = post.frontmatter.date || post.fields?.date || ""
     return dateStr.includes(pageContext.year)
@@ -43,6 +42,8 @@ export const pageQuery = graphql`
           abstract
           tags
           date
+          event
+          year
         }
       }
     }
