@@ -1,3 +1,229 @@
+// const { createFilePath } = require(`gatsby-source-filesystem`)
+// const path = require(`path`)
+// const fs = require('fs')
+
+// exports.onCreateNode = ({ node, actions, getNode }) => {
+//   const { createNodeField } = actions
+  
+//   if (node.internal.type === `MarkdownRemark`) {
+//     const slug = createFilePath({ node, getNode }).replace('/', '')
+    
+//     createNodeField({
+//       node: node,
+//       name: `slug`,
+//       value: slug,
+//     })
+    
+//     const date = slug.split('_')[0]
+//     if (date.match(/\d{4}-\d{2}-\d{2}/)) {
+//       createNodeField({
+//         node: node,
+//         name: `date`,
+//         value: date,
+//       })
+//     }
+
+//     const parent = getNode(node.parent)
+//     const collection = parent.sourceInstanceName
+
+//     createNodeField({
+//       node: node,
+//       name: `collection`,
+//       value: collection,
+//     })
+
+//     let imageFilename = null
+//     if (node.frontmatter && node.frontmatter.image) {
+//       imageFilename = node.frontmatter.image
+//     } else {
+//       const files = fs.readdirSync(path.dirname(node.fileAbsolutePath)).filter(el => el !== 'index.md')
+//       const matched = files.filter(el => el.endsWith('.png') || el.endsWith('.jpeg') || el.endsWith('.jpg') || el.endsWith('.webp'))
+//       if (matched.length > 0) {
+//         imageFilename = path.basename(matched[0])
+//       }
+//     }
+    
+//     createNodeField({
+//       node: node,
+//       name: "image",
+//       value: imageFilename,
+//     })
+//   }
+// }
+
+// exports.createPages = async ({ graphql, actions }) => {
+//   const dict_prettyNames = {}
+//   const { createPage } = actions
+
+//   const result = await graphql(
+//     `
+//       {
+//         site {
+//           siteMetadata {
+//             pages
+//           }
+//         }
+//         allMarkdownRemark(sort: {fields: {date: DESC}}, limit: 999) {
+//           edges {
+//             node {
+//               fields {
+//                 slug
+//                 date
+//                 collection
+//               }
+//               frontmatter {
+//                 title
+//                 uuid
+//                 prettyName
+//                 year
+//               }
+//             }
+//           }
+//         }
+//       }
+//     `
+//   )
+
+//   if (result.errors) {
+//     throw result.errors
+//   }
+
+//   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
+
+//   pagesToCreate.forEach(page => {
+//     const cleanPage = page.replace(/^\d+_/, '')
+//     const parts = cleanPage.split('__')
+//     const template = parts.length > 1 ? parts[1] : 'cards'
+//     const pageName = parts.length > 2 ? parts[2] : parts[0]
+
+//     createPage({
+//       path: `/${pageName}/`,
+//       component: path.resolve(`./src/templates/${template}.jsx`),
+//       context: {
+//         pageName: pageName,
+//         year: null 
+//       },
+//     })
+//   })
+
+//   result.data.allMarkdownRemark.edges.forEach((edge) => {
+//     const fields = edge.node.fields;
+//     const uuid = edge.node.frontmatter.uuid;
+//     const prettyName = edge.node.frontmatter.prettyName;
+
+//     if (!fields || fields.slug === "") return
+
+//     createPage({
+//       path: `/${uuid}`,
+//       component: path.resolve(`./src/templates/blog-post.jsx`),
+//       context: { slug: fields.slug },
+//     })
+
+//     if (prettyName) {
+//       if (prettyName in dict_prettyNames) {
+//         throw Error(`Pretty name ${prettyName} already exists`);
+//       }
+//       dict_prettyNames[prettyName] = uuid
+//       createPage({
+//           path: `/${prettyName}`,
+//           component: path.resolve(`./src/templates/blog-post.jsx`),
+//           context: { slug: fields.slug },
+//       })
+//       createPage({
+//           path: `/${prettyName}/`.toLowerCase(),
+//           component: path.resolve(`./src/templates/blog-post.jsx`),
+//           context: { slug: fields.slug },
+//       })
+//     }
+//   })
+
+//   const allEdges = result.data.allMarkdownRemark.edges
+
+//   const publicationsEdges = allEdges.filter(
+//     edge => edge.node.fields.collection === "publications" || edge.node.fields.collection?.includes("publications")
+//   )
+//   const pubYears = [...new Set(publicationsEdges.map(e => {
+//     if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
+//     if (e.node.fields.date) return e.node.fields.date.substring(0, 4);
+//     return null;
+//   }).filter(Boolean))];
+
+//   pubYears.forEach(year => {
+//     createPage({
+//       path: `/publications/${year}/`,
+//       component: path.resolve(`./src/templates/cards.jsx`),
+//       context: {
+//         pageName: "publications",
+//         year: year,
+//       },
+//     })
+//   })
+
+//   const eventsEdges = allEdges.filter(
+//     edge => edge.node.fields.collection === "événements" || edge.node.fields.collection?.includes("événements")
+//   )
+//   const eventYears = [...new Set(eventsEdges.map(e => {
+//     if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
+//     if (e.node.fields.date) return e.node.fields.date.substring(0, 4);
+//     return null;
+//   }).filter(Boolean))];
+
+//   eventYears.forEach(year => {
+//     createPage({
+//       path: `/événements/${year}/`,
+//       component: path.resolve(`./src/templates/cards.jsx`),
+//       context: {
+//         pageName: "événements",
+//         year: year,
+//       },
+//     })
+//   })
+// }
+
+// exports.createSchemaCustomization = ({ actions }) => {
+//   const { createTypes } = actions
+//   const typeDefs = `
+//     type SiteSiteMetadata {
+//       title: String
+//       description: String
+//       author: String
+//       logo: String
+//       pages: [String]
+//     }
+
+//     type MarkdownRemark implements Node @infer {
+//       frontmatter: Frontmatter
+//       fields: MarkdownRemarkFields
+//     }
+
+//     type MarkdownRemarkFields @infer {
+//       slug: String
+//       date: Date @dateformat
+//       collection: String
+//       image: File @fileByRelativePath
+//     }
+
+//     type Frontmatter @infer {
+//       title: String
+//       tags: [String]
+//       sound: String
+//       author: String
+//       authors: String
+//       abstract: String
+//       date: Date @dateformat
+//       year: String
+//       type: String
+//       url: String
+//       publisher: String
+//       container_title: String
+//       event: Boolean
+//       uuid: String
+//       prettyName: String
+//     }
+//   `
+//   createTypes(typeDefs)
+// }
+
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 const fs = require('fs')
@@ -76,6 +302,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 uuid
                 prettyName
                 year
+                paging
               }
             }
           }
@@ -89,12 +316,15 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   const pagesToCreate = result.data.site?.siteMetadata?.pages || []
+  const pageTemplateMap = {}
 
+  // 1. Create main section pages and record their template type (cards or longcards)
   pagesToCreate.forEach(page => {
     const cleanPage = page.replace(/^\d+_/, '')
     const parts = cleanPage.split('__')
     const template = parts.length > 1 ? parts[1] : 'cards'
     const pageName = parts.length > 2 ? parts[2] : parts[0]
+    pageTemplateMap[pageName] = template
 
     createPage({
       path: `/${pageName}/`,
@@ -106,6 +336,7 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
+  // 2. Create individual blog post / detail pages
   result.data.allMarkdownRemark.edges.forEach((edge) => {
     const fields = edge.node.fields;
     const uuid = edge.node.frontmatter.uuid;
@@ -137,45 +368,39 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   })
 
+  // 3. Dynamic paging generation respecting the correct template (cards vs longcards)
   const allEdges = result.data.allMarkdownRemark.edges
+  const collectionMap = {}
 
-  const publicationsEdges = allEdges.filter(
-    edge => edge.node.fields.collection === "publications" || edge.node.fields.collection?.includes("publications")
-  )
-  const pubYears = [...new Set(publicationsEdges.map(e => {
-    if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
-    if (e.node.fields.date) return e.node.fields.date.substring(0, 4);
-    return null;
-  }).filter(Boolean))];
-
-  pubYears.forEach(year => {
-    createPage({
-      path: `/publications/${year}/`,
-      component: path.resolve(`./src/templates/cards.jsx`),
-      context: {
-        pageName: "publications",
-        year: year,
-      },
-    })
+  allEdges.forEach(edge => {
+    const collection = edge.node.fields.collection
+    if (!collection || collection.startsWith('_')) return
+    if (!collectionMap[collection]) {
+      collectionMap[collection] = []
+    }
+    collectionMap[collection].push(edge)
   })
 
-  const eventsEdges = allEdges.filter(
-    edge => edge.node.fields.collection === "événements" || edge.node.fields.collection?.includes("événements")
-  )
-  const eventYears = [...new Set(eventsEdges.map(e => {
-    if (e.node.frontmatter.year) return String(e.node.frontmatter.year);
-    if (e.node.fields.date) return e.node.fields.date.substring(0, 4);
-    return null;
-  }).filter(Boolean))];
+  Object.keys(collectionMap).forEach(collection => {
+    const colEdges = collectionMap[collection]
+    const templateName = pageTemplateMap[collection] || 'cards'
+    
+    const pagingValues = [...new Set(colEdges.map(e => {
+      if (e.node.frontmatter && e.node.frontmatter.paging) {
+        return String(e.node.frontmatter.paging)
+      }
+      return null
+    }).filter(Boolean))]
 
-  eventYears.forEach(year => {
-    createPage({
-      path: `/événements/${year}/`,
-      component: path.resolve(`./src/templates/cards.jsx`),
-      context: {
-        pageName: "événements",
-        year: year,
-      },
+    pagingValues.forEach(pagingVal => {
+      createPage({
+        path: `/${collection}/${pagingVal}/`,
+        component: path.resolve(`./src/templates/${templateName}.jsx`),
+        context: {
+          pageName: collection,
+          year: pagingVal,
+        },
+      })
     })
   })
 }
@@ -212,6 +437,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       abstract: String
       date: Date @dateformat
       year: String
+      paging: String
       type: String
       url: String
       publisher: String
