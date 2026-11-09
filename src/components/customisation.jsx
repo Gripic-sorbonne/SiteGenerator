@@ -1,5 +1,5 @@
 import * as React from 'react'
-import LogoSorbonne from '../images/logo.svg'
+import LogoSorbonne from '../images/logo_gripic.png'
 
 export const Introduction = () => { return (
     <div className="landing-block text">
