@@ -5,19 +5,19 @@ export const Introduction = () => { return (
     <div className="landing-block text">
         <h2>Template de site académique de la Fac de Lettres</h2>
         <p>
-            Ce site est un modèle pour les sites de laboratoire de <a href="https://lettres.sorbonne-universite.fr/">Faculté des Lettres de Sorbonne Université</a>.
-                Il a pour vocation d'être un exemple modifiable afin de mettre en place aisément des sites web permettant de publier billets de blogs et mettre en avant des événements liés à l'activité d'un laboratoire.
+            Ce site est un modèle pour les sites de laboratoire de <a href="https://lettres.sorbonne-universite.fr/">Faculté des Lettres de Sorbonne Université</a>[cite: 25].
+                Il a pour vocation d'être un exemple modifiable afin de mettre en place aisément des sites web permettant de publier billets de blogs et mettre en avant des événements liés à l'activité d'un laboratoire[cite: 25].
         </p>
         <p>
             Fonctionnalités principales
             <ul>
-                <li> Publier du contenu à partir de simples fichiers markdown </li>
-                <li> Mise en avant d'événements </li>
-                <li> Gestion facilitée de membres </li>
+                <li> Publier du contenu à partir de simples fichiers markdown[cite: 25]</li>
+                <li> Mise en avant d'événements[cite: 25]</li>
+                <li> Gestion facilitée de membres[cite: 25]</li>
             </ul>
         </p>
         <p>
-            Ce template a été créé par les ingénieurs de <a href="ceres.sorbonne-universite.fr">l'unité de service du CERES</a>.
+            Ce template a été créé par les ingénieurs de <a href="ceres.sorbonne-universite.fr">l'unité de service du CERES</a>[cite: 25].
         </p>
     </div>
 )}
@@ -25,17 +25,16 @@ export const Introduction = () => { return (
 export const Footer = () => (
     <footer id="footer">
         <div className="footer-block">
-            <p>CERES — Centre d'expérimentation en méthodes numériques pour les recherches en sciences humaines et
-                sociales</p>
-            <p>Faculté des Lettres de Sorbonne Université</p>
-            <a href='https://lettres.sorbonne-universite.fr/' style={{ width: "40%", display: "inline-block"}}>
-                <img className="logo" src={LogoSorbonne} style={{ maxWidth: "100%", margin: 0, height: "194px", width: "500px" }} />
+            <p><strong>GRIPIC</strong> — Groupe de recherche sur les enjeux de la communication</p>
+            <p>CELSA Sorbonne Université</p>
+            <a href='https://lettres.sorbonne-universite.fr/' style={{ display: "inline-block", maxWidth: "220px", marginTop: "1rem" }}>
+                <img className="logo" src={LogoSorbonne} alt="Sorbonne Université" style={{ width: "100%", height: "auto", margin: 0, display: "block" }} />
             </a>
         </div>
         <div className="footer-block">
-            <p> Pour nous rendre visite : Maison de la Recherche, 28 rue Serpente,
-                75006 Paris, Bureau S007.
-            </p>
-            <p>Pour nous contacter : <a href="mailto: contact@gripic.fr"> contact@gripic.fr</a></p>
+            <p><strong>Pour nous rendre visite :</strong> 77, rue de Villiers, 92200 Neuilly-sur-Seine.</p>
+            <p>Métro : "Pont de Levallois-Bécon" (ligne 3) ou "Pont-de-Neuilly" (ligne 1)</p>
+            <p><strong>Pour nous contacter :</strong> <a href="mailto:contact@gripic.fr">contact@gripic.fr</a></p>
         </div>
-    </footer>)
+    </footer>
+)
