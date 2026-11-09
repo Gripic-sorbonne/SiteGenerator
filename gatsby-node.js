@@ -52,7 +52,7 @@
 // }
 
 // exports.createPages = async ({ graphql, actions }) => {
-//   const dict_prettyNames = {}
+//   const dict_prettynames = {}
 //   const { createPage } = actions
 
 //   const result = await graphql(
@@ -74,7 +74,7 @@
 //               frontmatter {
 //                 title
 //                 uuid
-//                 prettyName
+//                 prettyname
 //                 year
 //               }
 //             }
@@ -109,7 +109,7 @@
 //   result.data.allMarkdownRemark.edges.forEach((edge) => {
 //     const fields = edge.node.fields;
 //     const uuid = edge.node.frontmatter.uuid;
-//     const prettyName = edge.node.frontmatter.prettyName;
+//     const prettyname = edge.node.frontmatter.prettyname;
 
 //     if (!fields || fields.slug === "") return
 
@@ -119,18 +119,18 @@
 //       context: { slug: fields.slug },
 //     })
 
-//     if (prettyName) {
-//       if (prettyName in dict_prettyNames) {
-//         throw Error(`Pretty name ${prettyName} already exists`);
+//     if (prettyname) {
+//       if (prettyname in dict_prettynames) {
+//         throw Error(`Pretty name ${prettyname} already exists`);
 //       }
-//       dict_prettyNames[prettyName] = uuid
+//       dict_prettynames[prettyname] = uuid
 //       createPage({
-//           path: `/${prettyName}`,
+//           path: `/${prettyname}`,
 //           component: path.resolve(`./src/templates/blog-post.jsx`),
 //           context: { slug: fields.slug },
 //       })
 //       createPage({
-//           path: `/${prettyName}/`.toLowerCase(),
+//           path: `/${prettyname}/`.toLowerCase(),
 //           component: path.resolve(`./src/templates/blog-post.jsx`),
 //           context: { slug: fields.slug },
 //       })
@@ -218,7 +218,7 @@
 //       container_title: String
 //       event: Boolean
 //       uuid: String
-//       prettyName: String
+//       prettyname: String
 //     }
 //   `
 //   createTypes(typeDefs)
@@ -278,7 +278,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 }
 
 exports.createPages = async ({ graphql, actions }) => {
-  const dict_prettyNames = {}
+  const dict_prettynames = {}
   const { createPage } = actions
 
   const result = await graphql(
@@ -300,7 +300,7 @@ exports.createPages = async ({ graphql, actions }) => {
               frontmatter {
                 title
                 uuid
-                prettyName
+                prettyname
                 year
                 paging
               }
@@ -340,7 +340,7 @@ exports.createPages = async ({ graphql, actions }) => {
   result.data.allMarkdownRemark.edges.forEach((edge) => {
     const fields = edge.node.fields;
     const uuid = edge.node.frontmatter.uuid;
-    const prettyName = edge.node.frontmatter.prettyName;
+    const prettyname = edge.node.frontmatter.prettyname;
 
     if (!fields || fields.slug === "") return
 
@@ -350,18 +350,18 @@ exports.createPages = async ({ graphql, actions }) => {
       context: { slug: fields.slug },
     })
 
-    if (prettyName) {
-      if (prettyName in dict_prettyNames) {
-        throw Error(`Pretty name ${prettyName} already exists`);
+    if (prettyname) {
+      if (prettyname in dict_prettynames) {
+        throw Error(`Pretty name ${prettyname} already exists`);
       }
-      dict_prettyNames[prettyName] = uuid
+      dict_prettynames[prettyname] = uuid
       createPage({
-          path: `/${prettyName}`,
+          path: `/${prettyname}`,
           component: path.resolve(`./src/templates/blog-post.jsx`),
           context: { slug: fields.slug },
       })
       createPage({
-          path: `/${prettyName}/`.toLowerCase(),
+          path: `/${prettyname}/`.toLowerCase(),
           component: path.resolve(`./src/templates/blog-post.jsx`),
           context: { slug: fields.slug },
       })
@@ -444,7 +444,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       container_title: String
       event: Boolean
       uuid: String
-      prettyName: String
+      prettyname: String
     }
   `
   createTypes(typeDefs)

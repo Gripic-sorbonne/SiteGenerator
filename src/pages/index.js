@@ -60,7 +60,7 @@ const HomeHeader = ({ nodes }) => {
                     for (const event of events) {
                         if (isDateOnCallendar({ calendarDate: date, eventDate: event.fields.dateRaw })) {
                             const title = event.frontmatter.title.length > 25 ? event.frontmatter.title.slice(0, 23) + "..." : event.frontmatter.title
-                            return <Link to={`/${event.frontmatter.prettyName ? event.frontmatter.prettyName : event.frontmatter.uuid}/` }>{title}</Link>
+                            return <Link to={`/${event.frontmatter.prettyname ? event.frontmatter.prettyname : event.frontmatter.uuid}/` }>{title}</Link>
                         }
                     }
                     return null
@@ -90,7 +90,7 @@ export const query = graphql`
                 sound
                 event
                 uuid
-                prettyName
+                prettyname
             }
             fields {
                 collection

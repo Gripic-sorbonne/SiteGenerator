@@ -70,7 +70,7 @@
 //         abstract
 //         sound
 //         uuid
-//         prettyName
+//         prettyname
 //         event
 //         year
 //       }
@@ -159,7 +159,7 @@ export const query = graphql`
         abstract
         sound
         uuid
-        prettyName
+        prettyname
         event
         year
       }

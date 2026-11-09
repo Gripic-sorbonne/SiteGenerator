@@ -111,7 +111,7 @@
 //                     abstract
 //                     sound
 //                     uuid
-//                     prettyName
+//                     prettyname
 //                     year
 //                     event
 //                 }
@@ -242,7 +242,7 @@ export const query = graphql`
                     abstract
                     sound
                     uuid
-                    prettyName
+                    prettyname
                     paging
                     event
                 }
