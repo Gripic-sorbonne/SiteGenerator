@@ -27,14 +27,13 @@ export const Footer = () => (
         <div className="footer-block">
             <p><strong>GRIPIC</strong> — Groupe de recherche sur les enjeux de la communication</p>
             <p>CELSA Sorbonne Université</p>
-            {/* Contenedor estricto para que el SVG respuepte sus proporciones sin desbordarse */}
-            <div style={{ width: "160px", maxWidth: "100%", marginTop: "1rem" }}>
-                <a href='https://lettres.sorbonne-universite.fr/' style={{ display: "block", textDecoration: "none" }}>
+            <div style={{ marginTop: "1rem" }}>
+                <a href='https://lettres.sorbonne-universite.fr/' style={{ display: "inline-block", textDecoration: "none" }}>
                     <img 
-                        className="logo" 
                         src={LogoSorbonne} 
                         alt="Sorbonne Université" 
-                        style={{ width: "100%", height: "auto", margin: 0, display: "block" }} 
+                        draggable={false}
+                        style={{ width: "160px", height: "auto", maxWidth: "100%", margin: 0, display: "block", objectFit: "contain" }} 
                     />
                 </a>
             </div>
